@@ -1,3 +1,7 @@
+// Copyright 2024 Sylvain Müller. All rights reserved.
+// Mount of this source code is governed by a MIT license that can be found
+// at https://github.com/tigerwill90/foxgeoip/blob/master/LICENSE.
+
 package foxgeoip
 
 import (
