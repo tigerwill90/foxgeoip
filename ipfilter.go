@@ -22,6 +22,9 @@ type IPFilter struct {
 
 // New creates a new IPFilter with the provided GeoIP2 reader and options. The ip filter is intended to work with
 // MaxMind GeoLite2 or GeoIP2 databases. It should work with other MMDB databases but has not been tested.
+// Note that blacklist and whitelist options are mutually exclusive. Either it is a whitelist, and all requests are
+// denied except for IPs that have a country code associated in the whitelist, OR it is a blacklist, and all requests are
+// allowed except IPs that have a country code associated in the blacklist.
 func New(db *geoip2.Reader, opts ...Option) *IPFilter {
 	cfg := defaultConfig()
 	for _, opt := range opts {
@@ -49,6 +52,9 @@ func New(db *geoip2.Reader, opts ...Option) *IPFilter {
 
 // Middleware creates a middleware function for the IP filter. The middleware is intended to work with
 // MaxMind GeoLite2 or GeoIP2 databases. It should work with other MMDB databases but has not been tested.
+// Note that blacklist and whitelist options are mutually exclusive. Either it is a whitelist, and all requests are
+// denied except for IPs that have a country code associated in the whitelist, OR it is a blacklist, and all requests are
+// allowed except IPs that have a country code associated in the blacklist.
 func Middleware(db *geoip2.Reader, opts ...Option) fox.MiddlewareFunc {
 	return New(db, opts...).FilterIP
 }

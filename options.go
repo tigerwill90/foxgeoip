@@ -34,6 +34,8 @@ func defaultConfig() *config {
 
 type Filter func(r *http.Request) bool
 
+// WithBlacklistedCountries sets the blacklist with the provided country codes.
+// It clears any existing whitelist. Requests from countries in the blacklist will be denied.
 func WithBlacklistedCountries(codes ...string) Option {
 	return optionFunc(func(c *config) {
 		c.whitelist = nil
@@ -41,6 +43,8 @@ func WithBlacklistedCountries(codes ...string) Option {
 	})
 }
 
+// WithWhitelistedCountries sets the whitelist with the provided country codes.
+// It clears any existing blacklist. Requests from countries not in the whitelist will be denied.
 func WithWhitelistedCountries(codes ...string) Option {
 	return optionFunc(func(c *config) {
 		c.blacklist = nil
@@ -58,6 +62,9 @@ func WithFilter(f ...Filter) Option {
 	})
 }
 
+// WithClientIPStrategy sets a custom strategy to determine the client IP address.
+// This is for advanced use case, you should configure the strategy with Fox's router option using
+// fox.WithClientIPStrategy.
 func WithClientIPStrategy(strategy fox.ClientIPStrategy) Option {
 	return optionFunc(func(c *config) {
 		if strategy != nil {
@@ -66,6 +73,7 @@ func WithClientIPStrategy(strategy fox.ClientIPStrategy) Option {
 	})
 }
 
+// WithLogHandler sets a custom log handler for structured logging.
 func WithLogHandler(handler slog.Handler) Option {
 	return optionFunc(func(c *config) {
 		if handler != nil {
@@ -74,6 +82,7 @@ func WithLogHandler(handler slog.Handler) Option {
 	})
 }
 
+// WithResponse sets a custom response handler for blocked requests.
 func WithResponse(handler fox.HandlerFunc) Option {
 	return optionFunc(func(c *config) {
 		if handler != nil {
