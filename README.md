@@ -45,7 +45,7 @@ f := fox.New(
 	fox.WithMiddleware(
 		foxgeoip.Middleware(
 			db,
-			foxgeoip.WithWhitelistedCountries(cfg.BlacklistedCountryCodes...),
+			foxgeoip.WithBlacklistedCountries("US", "CN", "AU"),
 			foxgeoip.WithFilter(func(r *http.Request) bool {
 				return isTrustedDomain(r.Host, cfg.TrustedDomains)
 			}),
