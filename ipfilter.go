@@ -86,7 +86,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 		}
 
 		if err != nil {
-			f.logger.ErrorContext(ctx, "geoip: failed to derive client ip", slog.Any("error", err))
+			f.logger.ErrorContext(ctx, "geoip: failed to derive client ip", slog.String("error", err.Error()))
 			http.Error(c.Writer(), http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -98,7 +98,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 				"geoip: unexpected lookup error",
 				slog.String("ip", ipAddr.String()),
 				slog.String("country", code),
-				slog.Any("error", err),
+				slog.String("error", err.Error()),
 			)
 			http.Error(c.Writer(), http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
