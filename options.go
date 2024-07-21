@@ -11,12 +11,12 @@ import (
 )
 
 type config struct {
-	blacklist    []string
-	whitelist    []string
-	filters      []Filter
 	strategy     fox.ClientIPStrategy
 	handler      slog.Handler
 	blockHandler fox.HandlerFunc
+	blacklist    []string
+	whitelist    []string
+	filters      []Filter
 }
 
 type Option interface {

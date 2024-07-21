@@ -15,13 +15,13 @@ import (
 )
 
 type IPFilter struct {
+	strategy     fox.ClientIPStrategy
 	r            *geoip2.Reader
 	cfg          *config
-	strategy     fox.ClientIPStrategy
 	blockHandler fox.HandlerFunc
-	isWhitelist  bool
 	countryCodes countryCodes
 	logger       *slog.Logger
+	isWhitelist  bool
 }
 
 // New creates a new IPFilter with the provided GeoIP2 reader and options. The ip filter is intended to work with
