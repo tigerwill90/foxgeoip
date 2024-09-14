@@ -87,6 +87,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 
 		if err != nil {
 			f.logger.ErrorContext(ctx, "geoip: failed to derive client ip", slog.String("error", err.Error()))
+			c.SetHeader(fox.HeaderConnection, "close")
 			http.Error(c.Writer(), http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -100,6 +101,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 				slog.String("country", code),
 				slog.String("error", err.Error()),
 			)
+			c.SetHeader(fox.HeaderConnection, "close")
 			http.Error(c.Writer(), http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -122,6 +124,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 // DefaultBlockingResponse is the default response for blocked IPs.
 // It responds with a 403 Forbidden http status.
 func DefaultBlockingResponse(c fox.Context) {
+	c.SetHeader(fox.HeaderConnection, "close")
 	c.Writer().WriteHeader(http.StatusForbidden)
 }
 
