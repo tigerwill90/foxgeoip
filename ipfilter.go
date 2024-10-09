@@ -99,6 +99,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 				"geoip: unexpected lookup error",
 				slog.String("ip", ipAddr.String()),
 				slog.String("country", code),
+				slog.String("path", c.Request().URL.Path),
 				slog.String("error", err.Error()),
 			)
 			c.SetHeader(fox.HeaderConnection, "close")
@@ -112,7 +113,9 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 				"geoip: blocking ip address",
 				slog.String("ip", ipAddr.String()),
 				slog.String("country", code),
+				slog.String("path", c.Request().URL.Path),
 			)
+			c.SetHeader(fox.HeaderConnection, "close")
 			f.blockHandler(c)
 			return
 		}
@@ -124,7 +127,6 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 // DefaultBlockingResponse is the default response for blocked IPs.
 // It responds with a 403 Forbidden http status.
 func DefaultBlockingResponse(c fox.Context) {
-	c.SetHeader(fox.HeaderConnection, "close")
 	c.Writer().WriteHeader(http.StatusForbidden)
 }
 
