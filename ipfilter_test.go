@@ -206,9 +206,7 @@ func TestMiddleware(t *testing.T) {
 					Middleware(
 						r,
 						WithBlacklistedCountries("FR", "CH", "US"),
-						WithFilter(func(r *http.Request) bool {
-							return true
-						}),
+						WithFilter(func(c fox.Context) bool { return true }),
 					),
 				),
 			),
