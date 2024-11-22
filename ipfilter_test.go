@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tigerwill90/fox"
-	"github.com/tigerwill90/fox/strategy"
+	"github.com/tigerwill90/fox/clientip"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -120,7 +120,7 @@ func TestMiddleware(t *testing.T) {
 			name: "no blacklist or whitelist, default to allow all",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(r),
@@ -133,7 +133,7 @@ func TestMiddleware(t *testing.T) {
 			name: "whitelist CH, FR and UK, deny US",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(
@@ -149,7 +149,7 @@ func TestMiddleware(t *testing.T) {
 			name: "whitelist AU, FR and UK, allow AU",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(
@@ -165,7 +165,7 @@ func TestMiddleware(t *testing.T) {
 			name: "blacklist CH, FR and US, deny US",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(
@@ -181,7 +181,7 @@ func TestMiddleware(t *testing.T) {
 			name: "blacklist CH, FR and US, deny US with custom response",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(
@@ -200,7 +200,7 @@ func TestMiddleware(t *testing.T) {
 			name: "blacklist CH, FR and US, filter request",
 			f: fox.New(
 				fox.WithClientIPStrategy(
-					strategy.NewRemoteAddr(),
+					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(
@@ -222,7 +222,7 @@ func TestMiddleware(t *testing.T) {
 					Middleware(
 						r,
 						WithBlacklistedCountries("FR", "CH", "US"),
-						WithClientIPStrategy(strategy.NewRemoteAddr()),
+						WithClientIPStrategy(clientip.NewRemoteAddr()),
 					),
 				),
 			),
