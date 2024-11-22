@@ -7,7 +7,6 @@ package foxgeoip
 import (
 	"github.com/tigerwill90/fox"
 	"log/slog"
-	"net/http"
 )
 
 type config struct {
@@ -36,7 +35,7 @@ func defaultConfig() *config {
 	}
 }
 
-type Filter func(r *http.Request) bool
+type Filter func(c fox.Context) bool
 
 // WithBlacklistedCountries sets the blacklist with the provided country codes.
 // It clears any existing whitelist. Requests from countries in the blacklist will be denied.
