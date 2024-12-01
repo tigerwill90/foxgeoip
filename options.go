@@ -10,7 +10,7 @@ import (
 )
 
 type config struct {
-	strategy     fox.ClientIPStrategy
+	resolver     fox.ClientIPResolver
 	handler      slog.Handler
 	blockHandler fox.HandlerFunc
 	blacklist    []string
@@ -65,13 +65,13 @@ func WithFilter(f ...Filter) Option {
 	})
 }
 
-// WithClientIPStrategy sets a custom strategy to determine the client IP address.
-// This is for advanced use case, you should configure the strategy with Fox's router option using
-// fox.WithClientIPStrategy.
-func WithClientIPStrategy(strategy fox.ClientIPStrategy) Option {
+// WithClientIPResolver sets a custom resolver to determine the client IP address.
+// This is for advanced use case, you should configure the resolver with Fox's router option using
+// [fox.WithClientIPResolver].
+func WithClientIPResolver(strategy fox.ClientIPResolver) Option {
 	return optionFunc(func(c *config) {
 		if strategy != nil {
-			c.strategy = strategy
+			c.resolver = strategy
 		}
 	})
 }
