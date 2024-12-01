@@ -119,7 +119,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "no blacklist or whitelist, default to allow all",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -132,7 +132,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "whitelist CH, FR and UK, deny US",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -148,7 +148,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "whitelist AU, FR and UK, allow AU",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -164,7 +164,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "blacklist CH, FR and US, deny US",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -180,7 +180,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "blacklist CH, FR and US, deny US with custom response",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -199,7 +199,7 @@ func TestMiddleware(t *testing.T) {
 		{
 			name: "blacklist CH, FR and US, filter request",
 			f: fox.New(
-				fox.WithClientIPStrategy(
+				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
@@ -214,13 +214,13 @@ func TestMiddleware(t *testing.T) {
 			wantStatus: http.StatusNoContent,
 		},
 		{
-			name: "blacklist CH, FR and US, deny US with custom strategy",
+			name: "blacklist CH, FR and US, deny US with custom resolver",
 			f: fox.New(
 				fox.WithMiddleware(
 					Middleware(
 						r,
 						WithBlacklistedCountries("FR", "CH", "US"),
-						WithClientIPStrategy(clientip.NewRemoteAddr()),
+						WithClientIPResolver(clientip.NewRemoteAddr()),
 					),
 				),
 			),
@@ -228,7 +228,7 @@ func TestMiddleware(t *testing.T) {
 			wantStatus: http.StatusForbidden,
 		},
 		{
-			name: "no ip client strategy",
+			name: "no ip client resolver",
 			f: fox.New(
 				fox.WithMiddleware(
 					Middleware(

@@ -15,7 +15,7 @@ import (
 )
 
 type IPFilter struct {
-	strategy     fox.ClientIPStrategy
+	resolver     fox.ClientIPResolver
 	r            *geoip2.Reader
 	cfg          *config
 	blockHandler fox.HandlerFunc
@@ -38,7 +38,7 @@ func New(db *geoip2.Reader, opts ...Option) *IPFilter {
 	f := &IPFilter{
 		r:            db,
 		cfg:          cfg,
-		strategy:     cfg.strategy,
+		resolver:     cfg.resolver,
 		blockHandler: cfg.blockHandler,
 		logger:       slog.New(cfg.handler),
 	}
@@ -79,10 +79,10 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 
 		var ipAddr *net.IPAddr
 		var err error
-		if f.strategy == nil {
+		if f.resolver == nil {
 			ipAddr, err = c.ClientIP()
 		} else {
-			ipAddr, err = f.strategy.ClientIP(c)
+			ipAddr, err = f.resolver.ClientIP(c)
 		}
 
 		if err != nil {
