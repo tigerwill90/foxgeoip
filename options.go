@@ -68,10 +68,10 @@ func WithFilter(f ...Filter) Option {
 // WithClientIPResolver sets a custom resolver to determine the client IP address.
 // This is for advanced use case, you should configure the resolver with Fox's router option using
 // [fox.WithClientIPResolver].
-func WithClientIPResolver(strategy fox.ClientIPResolver) Option {
+func WithClientIPResolver(resolver fox.ClientIPResolver) Option {
 	return optionFunc(func(c *config) {
-		if strategy != nil {
-			c.resolver = strategy
+		if resolver != nil {
+			c.resolver = resolver
 		}
 	})
 }
