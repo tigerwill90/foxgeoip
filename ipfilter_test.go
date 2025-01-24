@@ -118,20 +118,20 @@ func TestMiddleware(t *testing.T) {
 	}{
 		{
 			name: "no blacklist or whitelist, default to allow all",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
 				fox.WithMiddleware(
 					Middleware(r),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusNoContent,
 		},
 		{
 			name: "whitelist CH, FR and UK, deny US",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
@@ -141,13 +141,13 @@ func TestMiddleware(t *testing.T) {
 						WithWhitelistedCountries("FR", "CH", "UK"),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusForbidden,
 		},
 		{
 			name: "whitelist AU, FR and UK, allow AU",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
@@ -157,13 +157,13 @@ func TestMiddleware(t *testing.T) {
 						WithWhitelistedCountries("AU", "CH", "UK"),
 					),
 				),
-			),
+			)),
 			remoteAddr: egAU,
 			wantStatus: http.StatusNoContent,
 		},
 		{
 			name: "blacklist CH, FR and US, deny US",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
@@ -173,13 +173,13 @@ func TestMiddleware(t *testing.T) {
 						WithBlacklistedCountries("FR", "CH", "US"),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusForbidden,
 		},
 		{
 			name: "blacklist CH, FR and US, deny US with custom response",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
@@ -192,13 +192,13 @@ func TestMiddleware(t *testing.T) {
 						}),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusUnauthorized,
 		},
 		{
 			name: "blacklist CH, FR and US, filter request",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithClientIPResolver(
 					clientip.NewRemoteAddr(),
 				),
@@ -209,13 +209,13 @@ func TestMiddleware(t *testing.T) {
 						WithFilter(func(c fox.Context) bool { return true }),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusNoContent,
 		},
 		{
 			name: "blacklist CH, FR and US, deny US with custom resolver",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithMiddleware(
 					Middleware(
 						r,
@@ -223,20 +223,20 @@ func TestMiddleware(t *testing.T) {
 						WithClientIPResolver(clientip.NewRemoteAddr()),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusForbidden,
 		},
 		{
 			name: "no ip client resolver",
-			f: fox.New(
+			f: must(fox.New(
 				fox.WithMiddleware(
 					Middleware(
 						r,
 						WithBlacklistedCountries("FR", "CH", "US"),
 					),
 				),
-			),
+			)),
 			remoteAddr: egUS,
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -257,4 +257,12 @@ func TestMiddleware(t *testing.T) {
 
 		})
 	}
+}
+
+func must(f *fox.Router, err error) *fox.Router {
+	if err != nil {
+		panic(err)
+	}
+	return f
+
 }

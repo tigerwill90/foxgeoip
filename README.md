@@ -31,28 +31,49 @@ go get -u github.com/tigerwill90/foxgeoip
 
 ### Usage
 ````go
-db, err := geoip2.Open("GeoLite2-Country.mmdb")
-if err != nil {
-	panic(err)
-}
-defer db.Close()
+package main
 
-f := fox.New(
-	fox.DefaultOptions(),
-	fox.WithClientIPStrategy(
-		strategy.NewRightmostNonPrivate(strategy.XForwardedForKey),
-	),
-	fox.WithMiddleware(
-		foxgeoip.Middleware(
-			db,
-			foxgeoip.WithBlacklistedCountries("US", "CN", "AU"),
-		),
-	),
+import (
+	"errors"
+	"github.com/oschwald/geoip2-golang"
+	"github.com/tigerwill90/fox"
+	"github.com/tigerwill90/fox/clientip"
+	"github.com/tigerwill90/foxgeoip"
+	"log"
+	"net/http"
 )
 
-f.MustHandle(http.MethodGet, "/hello/{name}", func(c fox.Context) {
-	_ = c.String(http.StatusOK, "hello %s\n", c.Param("name"))
-})
+func main() {
+	db, err := geoip2.Open("GeoLite2-Country.mmdb")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
-log.Fatalln(http.ListenAndServe(":8080", f))
+	resolver, err := clientip.NewRightmostNonPrivate(clientip.XForwardedForKey)
+	if err != nil {
+		panic(err)
+	}
+	f, err := fox.New(
+		fox.DefaultOptions(),
+		fox.WithClientIPResolver(resolver),
+		fox.WithMiddleware(
+			foxgeoip.Middleware(
+				db,
+				foxgeoip.WithBlacklistedCountries("US", "CN", "AU"),
+			),
+		),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	f.MustHandle(http.MethodGet, "/hello/{name}", func(c fox.Context) {
+		_ = c.String(http.StatusOK, "hello %s\n", c.Param("name"))
+	})
+
+	if err = http.ListenAndServe(":8080", f); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalln(err)
+	}
+}
 ````
