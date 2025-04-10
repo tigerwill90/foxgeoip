@@ -31,7 +31,7 @@ func (f optionFunc) apply(c *config) {
 func defaultConfig() *config {
 	return &config{
 		blockHandler: DefaultBlockingResponse,
-		handler:      noopHandler{slog.LevelDebug},
+		handler:      slog.DiscardHandler,
 	}
 }
 
