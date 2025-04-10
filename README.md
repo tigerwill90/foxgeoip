@@ -9,11 +9,10 @@
 
 FoxGeoIP is an experimental middleware for [Fox](https://github.com/tigerwill90/fox) that filters incoming requests based on the 
 client's IP address using GeoIP data. It blocks or allows access based on country codes. This middleware is intended to work with
-[MaxMind GeoLite2 or GeoIP2 databases](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data). It may work with other
-geolocation databases as well.
+[MaxMind GeoLite2 or GeoIP2 databases](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data).
 
 ## Disclaimer
-FoxGeoIP's API is closely tied to the Fox router, and it will only reach v1 when the router is stabilized. During the 
+Foxgeoip's API is closely tied to the Fox router, and it will only reach v1 when the router is stabilized. During the 
 pre-v1 phase, breaking changes may occur and will be documented in the release notes.
 
 ## Getting started

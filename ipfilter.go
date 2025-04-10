@@ -5,7 +5,6 @@
 package foxgeoip
 
 import (
-	"context"
 	"github.com/oschwald/geoip2-golang"
 	"github.com/tigerwill90/fox"
 	"log/slog"
@@ -187,26 +186,4 @@ func normalizeCodes(codes []string) countryCodes {
 		}
 	}
 	return normalizedCodes
-}
-
-var _ slog.Handler = (*noopHandler)(nil)
-
-type noopHandler struct {
-	level slog.Level
-}
-
-func (n noopHandler) Enabled(_ context.Context, level slog.Level) bool {
-	return level >= n.level
-}
-
-func (n noopHandler) Handle(_ context.Context, _ slog.Record) error {
-	return nil
-}
-
-func (n noopHandler) WithAttrs(_ []slog.Attr) slog.Handler {
-	return noopHandler{}
-}
-
-func (n noopHandler) WithGroup(_ string) slog.Handler {
-	return noopHandler{}
 }
