@@ -5,8 +5,9 @@
 package foxgeoip
 
 import (
-	"github.com/tigerwill90/fox"
 	"log/slog"
+
+	"github.com/tigerwill90/fox"
 )
 
 type config struct {

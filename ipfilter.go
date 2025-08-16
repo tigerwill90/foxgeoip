@@ -5,12 +5,13 @@
 package foxgeoip
 
 import (
-	"github.com/oschwald/geoip2-golang"
-	"github.com/tigerwill90/fox"
 	"log/slog"
 	"net"
 	"net/http"
 	"strings"
+
+	"github.com/oschwald/geoip2-golang"
+	"github.com/tigerwill90/fox"
 )
 
 type IPFilter struct {
