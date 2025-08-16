@@ -5,15 +5,16 @@
 package foxgeoip
 
 import (
+	"net"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/oschwald/geoip2-golang"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tigerwill90/fox"
 	"github.com/tigerwill90/fox/clientip"
-	"net"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 const (
