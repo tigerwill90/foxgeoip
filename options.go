@@ -36,7 +36,7 @@ func defaultConfig() *config {
 	}
 }
 
-type Filter func(c fox.Context) bool
+type Filter func(c *fox.Context) bool
 
 // WithBlacklistedCountries sets the blacklist with the provided country codes.
 // It clears any existing whitelist. Requests from countries in the blacklist will be denied.

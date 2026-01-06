@@ -65,7 +65,7 @@ func Middleware(db *geoip2.Reader, opts ...Option) fox.MiddlewareFunc {
 
 // FilterIP is a middleware function that filters requests based on the IP address.
 func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
-	return func(c fox.Context) {
+	return func(c *fox.Context) {
 
 		ctx := c.Request().Context()
 
@@ -134,7 +134,7 @@ func (f *IPFilter) FilterIP(next fox.HandlerFunc) fox.HandlerFunc {
 
 // DefaultBlockingResponse is the default response for blocked IPs.
 // It responds with a 403 Forbidden http status.
-func DefaultBlockingResponse(c fox.Context) {
+func DefaultBlockingResponse(c *fox.Context) {
 	c.Writer().WriteHeader(http.StatusForbidden)
 }
 
