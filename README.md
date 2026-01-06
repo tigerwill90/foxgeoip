@@ -34,12 +34,14 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/oschwald/geoip2-golang"
 	"github.com/tigerwill90/fox"
 	"github.com/tigerwill90/fox/clientip"
 	"github.com/tigerwill90/foxgeoip"
-	"log"
-	"net/http"
 )
 
 func main() {
@@ -53,7 +55,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	f, err := fox.New(
+	f := fox.MustRouter(
 		fox.DefaultOptions(),
 		fox.WithClientIPResolver(resolver),
 		fox.WithMiddleware(
@@ -63,12 +65,9 @@ func main() {
 			),
 		),
 	)
-	if err != nil {
-		panic(err)
-	}
 
-	f.MustHandle(http.MethodGet, "/hello/{name}", func(c fox.Context) {
-		_ = c.String(http.StatusOK, "hello %s\n", c.Param("name"))
+	f.MustAdd(fox.MethodGet, "/hello/{name}", func(c *fox.Context) {
+		_ = c.String(http.StatusOK, fmt.Sprintf("hello %s\n", c.Param("name")))
 	})
 
 	if err = http.ListenAndServe(":8080", f); err != nil && !errors.Is(err, http.ErrServerClosed) {
